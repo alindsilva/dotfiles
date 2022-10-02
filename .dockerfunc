@@ -2,7 +2,8 @@
 # Bash wrappers for docker run commands
 
 export DOCKER_REPO_PREFIX=jess
-
+export ETC_LOCALTIME=$(realpath /etc/localtime)
+export MAC_DISPLAY=docker.for.mac.host.internal:0
 #
 # Helper Functions
 #
@@ -88,9 +89,9 @@ audacity(){
 	del_stopped audacity
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-e QT_DEVICE_PIXEL_RATIO \
 		--device /dev/snd \
 		--group-add audio \
@@ -138,9 +139,9 @@ cheese(){
 	del_stopped cheese
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-v "${HOME}/Pictures:/root/Pictures" \
 		--device /dev/video0 \
 		--device /dev/snd \
@@ -167,9 +168,9 @@ chrome(){
 	# overlay support inotify, such bullshit
 	docker run -d \
 		--memory 3gb \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-v "${HOME}/Downloads:/root/Downloads" \
 		-v "${HOME}/Pictures:/root/Pictures" \
 		-v "${HOME}/Torrents:/root/Torrents" \
@@ -229,9 +230,9 @@ cura(){
 	del_stopped cura
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-v "${HOME}/cura:/root/cura" \
 		-v "${HOME}/.cache/cura:/root/.cache/cura" \
 		-v "${HOME}/.config/cura:/root/.config/cura" \
@@ -253,9 +254,9 @@ figma() {
 	del_stopped figma
 
 	docker run --rm -it \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		--name figma \
 		${DOCKER_REPO_PREFIX}/figma-wine bash
 }
@@ -266,14 +267,14 @@ firefox(){
 		--memory 2gb \
 		--net host \
 		--cpuset-cpus 0 \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-v "${HOME}/.firefox/cache:/root/.cache/mozilla" \
 		-v "${HOME}/.firefox/mozilla:/root/.mozilla" \
 		-v "${HOME}/Downloads:/root/Downloads" \
 		-v "${HOME}/Pictures:/root/Pictures" \
 		-v "${HOME}/Torrents:/root/Torrents" \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-e GDK_SCALE \
 		-e GDK_DPI_SCALE \
 		--device /dev/snd \
@@ -292,7 +293,7 @@ fleetctl(){
 }
 gcalcli(){
 	docker run --rm -it \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v "${HOME}/.gcalcli/home:/home/gcalcli/home" \
 		-v "${HOME}/.gcalcli/work/oauth:/home/gcalcli/.gcalcli_oauth" \
 		-v "${HOME}/.gcalcli/work/gcalclirc:/home/gcalcli/.gcalclirc" \
@@ -312,9 +313,9 @@ gimp(){
 	del_stopped gimp
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-v "${HOME}/Pictures:/root/Pictures" \
 		-v "${HOME}/.gtkrc:/root/.gtkrc" \
 		-e GDK_SCALE \
@@ -324,7 +325,7 @@ gimp(){
 }
 gitsome(){
 	docker run --rm -it \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		--name gitsome \
 		--hostname gitsome \
 		-v "${HOME}/.gitsomeconfig:/home/anon/.gitsomeconfig" \
@@ -366,7 +367,7 @@ imagemin(){
 	local filename="${image%.*}"
 
 	docker run --rm -it \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v "${HOME}/Pictures:/root/Pictures" \
 		${DOCKER_REPO_PREFIX}/imagemin sh -c "imagemin /root/Pictures/${image} > /root/Pictures/${filename}_min.${extension}"
 }
@@ -381,7 +382,7 @@ irssi() {
 		chown -R user /home/user/.irssi
 
 	docker run --rm -it \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v "${HOME}/.irssi:/home/user/.irssi" \
 		--read-only \
 		--name irssi \
@@ -407,10 +408,10 @@ keypassxc(){
 	del_stopped keypassxc
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-v /usr/share/X11/xkb:/usr/share/X11/xkb:ro \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-v /etc/machine-id:/etc/machine-id:ro \
 		--name keypassxc \
 		${DOCKER_REPO_PREFIX}/keepassxc
@@ -419,9 +420,9 @@ kicad(){
 	del_stopped kicad
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-v "${HOME}/kicad:/root/kicad" \
 		-v "${HOME}/.cache/kicad:/root/.cache/kicad" \
 		-v "${HOME}/.config/kicad:/root/.config/kicad" \
@@ -441,10 +442,10 @@ kvm(){
 
 	docker run -d \
 		--tmpfs /var/run \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-v "${HOME}/kvm:/root/kvm" \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-e GDK_SCALE \
 		-e GDK_DPI_SCALE \
 		-e QT_DEVICE_PIXEL_RATIO \
@@ -459,9 +460,9 @@ libreoffice(){
 	del_stopped libreoffice
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-v "${HOME}/slides:/root/slides" \
 		-e GDK_SCALE \
 		-e GDK_DPI_SCALE \
@@ -510,7 +511,7 @@ mpd(){
 		--device /dev/snd \
 		--cap-add SYS_ADMIN \
 		-e MPD_HOST=/var/lib/mpd/socket \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /etc/exports:/etc/exports:ro \
 		-v "${HOME}/.mpd:/var/lib/mpd" \
 		-v "${HOME}/.mpd.conf:/etc/mpd.conf" \
@@ -542,7 +543,7 @@ mutt(){
 		-e IMAP_SERVER \
 		-e SMTP_SERVER \
 		-v "${HOME}/.gnupg:/home/user/.gnupg:ro" \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		--name "mutt-${account}" \
 		${DOCKER_REPO_PREFIX}/mutt
 	)
@@ -560,9 +561,9 @@ neoman(){
 	del_stopped neoman
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		--device /dev/bus/usb \
 		--device /dev/usb \
 		--name neoman \
@@ -574,7 +575,7 @@ nes(){
 
 	docker run -d \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		--device /dev/dri \
 		--device /dev/snd \
 		--name nes \
@@ -611,13 +612,13 @@ notify_osd(){
 	del_stopped notify_osd
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		--net none \
 		-v /etc \
 		-v /home/user/.dbus \
 		-v /home/user/.cache/dconf \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		--name notify_osd \
 		${DOCKER_REPO_PREFIX}/notify-osd
 }
@@ -639,9 +640,9 @@ openscad(){
 	del_stopped openscad
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-v "${HOME}/openscad:/root/openscad" \
 		-v "${HOME}/.config/OpenSCAD:/root/.config/OpenSCAD" \
 		-e QT_DEVICE_PIXEL_RATIO \
@@ -656,7 +657,7 @@ opensnitch(){
 	del_stopped opensnitch
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		--net host \
 		--cap-add NET_ADMIN \
 		-v /etc/machine-id:/etc/machine-id:ro \
@@ -671,9 +672,9 @@ opensnitch(){
 		${DOCKER_REPO_PREFIX}/opensnitchd
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-v /usr/share/X11:/usr/share/X11:ro \
 		-v /usr/share/dbus-1:/usr/share/dbus-1 \
 		-v /etc/machine-id:/etc/machine-id:ro \
@@ -697,7 +698,7 @@ osquery(){
 	rmctr osquery
 
 	docker run -d --restart always \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-v /etc/os-release:/etc/os-release:ro \
 		--net host \
@@ -748,9 +749,9 @@ pivman(){
 	del_stopped pivman
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		--device /dev/bus/usb \
 		--device /dev/usb \
 		--name pivman \
@@ -781,7 +782,7 @@ privoxy(){
 	docker run -d \
 		--restart always \
 		--link torproxy:torproxy \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-p 8118:8118 \
 		--name privoxy \
 		${DOCKER_REPO_PREFIX}/privoxy
@@ -792,7 +793,7 @@ pulseaudio(){
 	del_stopped pulseaudio
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		--device /dev/snd \
 		-p 4713:4713 \
 		--restart always \
@@ -802,7 +803,7 @@ pulseaudio(){
 }
 rainbowstream(){
 	docker run -it --rm \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v "${HOME}/.rainbow_oauth:/root/.rainbow_oauth" \
 		-v "${HOME}/.rainbow_config.json:/root/.rainbow_config.json" \
 		--name rainbowstream \
@@ -821,9 +822,9 @@ remmina(){
 	del_stopped remmina
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-e GDK_SCALE \
 		-e GDK_DPI_SCALE \
 		-v "${HOME}/.remmina:/root/.remmina" \
@@ -835,9 +836,9 @@ ricochet(){
 	del_stopped ricochet
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-e GDK_SCALE \
 		-e GDK_DPI_SCALE \
 		-e QT_DEVICE_PIXEL_RATIO \
@@ -849,11 +850,11 @@ rstudio(){
 	del_stopped rstudio
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-v "${HOME}/fastly-logs:/root/fastly-logs" \
 		-v /dev/shm:/dev/shm \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-e QT_DEVICE_PIXEL_RATIO \
 		--device /dev/dri \
 		--name rstudio \
@@ -873,9 +874,9 @@ scudcloud(){
 	del_stopped scudcloud
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-v /etc/machine-id:/etc/machine-id:ro \
 		-v /var/run/dbus:/var/run/dbus \
 		-v "/var/run/user/$(id -u):/var/run/user/$(id -u)" \
@@ -911,9 +912,9 @@ skype(){
 	relies_on pulseaudio
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		--link pulseaudio:pulseaudio \
 		-e PULSE_SERVER=pulseaudio \
 		--security-opt seccomp:unconfined \
@@ -927,9 +928,9 @@ slack(){
 	del_stopped slack
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		--device /dev/snd \
 		--device /dev/dri \
 		--device /dev/video0 \
@@ -944,9 +945,9 @@ spotify(){
 	del_stopped spotify
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-e QT_DEVICE_PIXEL_RATIO \
 		--security-opt seccomp:unconfined \
 		--device /dev/snd \
@@ -989,12 +990,12 @@ steam(){
 	relies_on pulseaudio
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /etc/machine-id:/etc/machine-id:ro \
 		-v /var/run/dbus:/var/run/dbus \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-v "${HOME}/.steam:/home/steam" \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		--link pulseaudio:pulseaudio \
 		-e PULSE_SERVER=pulseaudio \
 		--device /dev/dri \
@@ -1061,9 +1062,9 @@ torbrowser(){
 	del_stopped torbrowser
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-e GDK_SCALE \
 		-e GDK_DPI_SCALE \
 		--device /dev/snd \
@@ -1077,9 +1078,9 @@ tormessenger(){
 	del_stopped tormessenger
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-e GDK_SCALE \
 		-e GDK_DPI_SCALE \
 		--device /dev/snd \
@@ -1094,7 +1095,7 @@ torproxy(){
 
 	docker run -d \
 		--restart always \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-p 9050:9050 \
 		--name torproxy \
 		${DOCKER_REPO_PREFIX}/tor-proxy
@@ -1110,7 +1111,7 @@ transmission(){
 	del_stopped transmission
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v "${HOME}/Torrents:/transmission/download" \
 		-v "${HOME}/.transmission:/transmission/config" \
 		-p 9091:9091 \
@@ -1135,7 +1136,7 @@ virsh(){
 	relies_on kvm
 
 	docker run -it --rm \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /run/libvirt:/var/run/libvirt \
 		--log-driver none \
 		--net container:kvm \
@@ -1145,9 +1146,9 @@ virtualbox(){
 	del_stopped virtualbox
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		--privileged \
 		--name virtualbox \
 		${DOCKER_REPO_PREFIX}/virtualbox
@@ -1156,9 +1157,9 @@ virt_viewer(){
 	relies_on kvm
 
 	docker run -it --rm \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix  \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-v /run/libvirt:/var/run/libvirt \
 		-e PULSE_SERVER=pulseaudio \
 		--group-add audio \
@@ -1171,9 +1172,9 @@ visualstudio(){
 	del_stopped visualstudio
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix  \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		--device /dev/dri \
 		--name visualstudio \
 		${DOCKER_REPO_PREFIX}/vscode
@@ -1184,9 +1185,9 @@ vlc(){
 	relies_on pulseaudio
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		-e GDK_SCALE \
 		-e GDK_DPI_SCALE \
 		-e QT_DEVICE_PIXEL_RATIO \
@@ -1203,7 +1204,7 @@ watchman(){
 	del_stopped watchman
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v "${HOME}/Downloads:/root/Downloads" \
 		--name watchman \
 		${DOCKER_REPO_PREFIX}/watchman --foreground
@@ -1218,7 +1219,7 @@ weematrix(){
 		chown -R user /home/user/.weechat
 
 	docker run --rm -it \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v "${HOME}/.weechat:/home/user/.weechat" \
 		-e "TERM=screen" \
 		--name weematrix \
@@ -1234,7 +1235,7 @@ weeslack(){
 		chown -R user /home/user/.weechat
 
 	docker run --rm -it \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v "${HOME}/.weechat:/home/user/.weechat" \
 		--name weeslack \
 		${DOCKER_REPO_PREFIX}/wee-slack
@@ -1252,9 +1253,9 @@ wireshark(){
 	del_stopped wireshark
 
 	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
+		-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${MAC_DISPLAY}" \
 		--cap-add NET_RAW \
 		--cap-add NET_ADMIN \
 		--net host \
@@ -1274,7 +1275,7 @@ ykman(){
 		"$(which ykman)" "$@"
 	else
 		docker run --rm -it \
-			-v /etc/localtime:/etc/localtime:ro \
+			-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 			--device /dev/usb \
 			--device /dev/bus/usb \
 			--name ykman \
@@ -1288,7 +1289,7 @@ ykpersonalize(){
 		"$(which ykpersonalize)" "$@"
 	else
 		docker run --rm -it \
-			-v /etc/localtime:/etc/localtime:ro \
+			-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 			--device /dev/usb \
 			--device /dev/bus/usb \
 			--name ykpersonalize \
@@ -1302,7 +1303,7 @@ yubico_piv_tool(){
 		"$(which yubico-piv-tool)" "$@"
 	else
 		docker run --rm -it \
-			-v /etc/localtime:/etc/localtime:ro \
+			-v "${ETC_LOCALTIME}:/etc/localtime:ro" \
 			--device /dev/usb \
 			--device /dev/bus/usb \
 			--name yubico-piv-tool \

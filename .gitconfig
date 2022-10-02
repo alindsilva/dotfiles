@@ -189,5 +189,16 @@
 
 [commit]
 	gpgsign = true
-[pull]
-	rebase = true
+[user]
+	name = Alin D'Silva
+	email = 44324859+alindsilva@users.noreply.github.com
+	signingkey = 3348826475C5F3C6
+[github]
+	user = alindsilva
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[gpg]
+	program = /usr/local/MacGPG2/bin/gpg2
